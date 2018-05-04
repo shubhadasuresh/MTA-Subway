@@ -1,0 +1,130 @@
+---
+title: "Geographical Information System of NYC"
+author: "Shubhada Suresh"
+date: "May 4, 2018"
+output: html_document
+css: styles.css
+
+---
+
+```{r setup, include=FALSE}
+library(shiny)
+library(leaflet)
+library(data.table)
+library(geosphere)
+library(tidyverse)
+library(sp)
+library(ggmap)
+library(maptools)
+library(Hmisc)
+library(xlsx)
+```
+
+## Project Overview
+
+ * NYC Subway Stations
+ * NYC Restaurants
+ * NYC Theaters
+ * NYC Museums and Galleries
+ 
+## Tidying data of NYC Subway stations
+   Certain train stations had multiple entrance and exits hence multiple latitude and longitude.
+   
+   I restricted only 1 row per station as multiple location of same station will not make sense when we plot it on map.
+   
+   Then loaded the clean file that can be used.
+
+```{r eval=FALSE}
+SUBWAY <-
+  read.csv(file = "https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/SUBWAY_STATION.csv", header =
+             T, sep = ",")
+SUBWAY$long <-
+  sub('.*\\(', '', SUBWAY$the_geom)
+SUBWAY$lat <- sub('.*\\s+', '', SUBWAY$long)
+SUBWAY$lat <- gsub(")", "", SUBWAY$lat)
+SUBWAY$long <- sub('\\s+.*$', '', SUBWAY$long)
+
+SUBWAY$lat <- as.numeric(SUBWAY$lat)
+SUBWAY$long <- as.numeric(SUBWAY$long)
+
+write.csv(SUBWAY_cleaned,'SUBWAY.csv')
+
+```
+
+## Tidying data of NYC Restaurants
+
+   * Selecting only required columns in the dataset.
+   * Combining columns like DBA,BORO,BUILDING,STREET,ZIPCODE as single column Address which will be easy to feed for geocode.
+   * Geocoding is the process of converting addresses (like a street address) into geographic coordinates (like latitude and longitude), which you can use to place markers on a map, or position the map
+   * To use the Geocoding API, you must register your app project on the Google API Console and get a Google API key which you can add to your app or website.
+   * For standard users Geocoding API supports up to 2500 requests daily. 
+   * So after 12 days of continous requests, i could able to get latitude and longitude for 30000 restaurants.
+   * There were so many special chracters in between the names and address which need to to be detected before feeding to geocode.
+   * Many places names were little different like **1$ pizza** but in goecode it needed to be **One Dollar Pizza**.
+   * Showing the short version of code here.
+   
+```{r eval=FALSE}
+NYC_Food <- read_csv("https://nycopendata.socrata.com/api/views/xx67-kt59/rows.csv?accessType=DOWNLOAD")
+
+NYC_Food <- NYC_Food %>% select(DBA,BORO,BUILDING,STREET,ZIPCODE,`CUISINE DESCRIPTION`)
+NYC_Food <- NYC_Food[!duplicated(NYC_Food), ]
+
+
+NYC_Food$x <- paste(NYC_Food$DBA,NYC_Food$BORO,NYC_Food$BUILDING,sep = ',')
+NYC_Food$y <- paste(NYC_Food$STREET,"New York"," NY ",sep = ',')
+NYC_Food$Address <- paste(NYC_Food$x,NYC_Food$y,NYC_Food$ZIPCODE,sep= " ")
+
+for(i in 1:nrow(NYC_Food))
+{
+result <- geocode(NYC_Food$Address[i])
+  NYC_Food$lon[i] <- as.numeric(result[1])
+  NYC_Food$lat[i] <- as.numeric(result[2])
+}
+
+write.csv(Just,'NYC_Food.csv')
+
+```
+
+## Tidying data of NYC Theaters.
+   * Similar to Subway station dataset.
+
+```{r eval=FALSE}
+ THEATER <- read.csv("https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/THEATER_cleaned.csv", header =T, sep = ",")
+
+THEATER$long <-
+  sub('.*\\(', '', THEATER$the_geom)
+THEATER$lat <- sub('.*\\s+', '', THEATER$long)
+THEATER$lat <- gsub(")", "", THEATER$lat)
+THEATER$long <-sub('\\s+.*$','', THEATER$long)
+
+write.csv(THEATER,'THEATER_cleaned.csv')
+```
+
+## Tidying data of NYC Museums and Galleries.
+
+   * This dataset had all Museums and Galleries in NYC.
+   * The Coordinate of latitude and longitude was combined.
+   * Used Reg expression to separate it as latidude and longitude in different columns.
+   * One column had website link which i used as hyperlink on map. So that on clicking we can directly see hte website of that particular Museum.
+   
+   
+```{r eval=FALSE}
+ Museums <- read.csv("https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/museums_galleries.csv", header =T, sep = ",")
+ 
+ Museums$lat <- sub("\\,.*", "", Museums$Geometry.X.Y)
+ Museums$long <- sub('.*,\\s*', '', Museums$Geometry.X.Y)
+ 
+ Museums$lat <- as.numeric(Museums$lat)
+ Museums$long <- as.numeric(Museums$long)
+ 
+```
+
+## Work in Shiny R
+
+  * Basic intension is to provide nearby entertainment spots like Theaters, Restaurants,Museums and Galleries.
+  * By now we have collected all the latitudes and longitudes of our data.
+  * Now the aim is to calculate distance through whic we can determine what is near.
+  * Geosphere package compute various aspects of distance, direction, area, etc.
+for geographic (geodetic) coordinates.
+  * Sort the coordinates in ascending order and pick 5 nearest to subrain station selected.
+  * In leaflet, using different markers, Popups,Labels,colours, legend we can demonstrate **miniature version of google maps** using Shiny R.
