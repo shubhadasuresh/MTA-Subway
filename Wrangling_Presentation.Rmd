@@ -1,0 +1,150 @@
+---
+title: "Geographical Information System of NYC"
+author: "Shubhada Suresh"
+output: 
+    ioslides_presentation: default
+
+css: styles.css
+---
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+body {
+text-align: justify}
+h1 {
+    font-size: 40px;
+
+}
+h2 {
+   text-align: center;
+
+}
+</style>
+
+
+
+## Objective
+
+To find restaurants and good entertainment spots (Movie Theater) near station
+
+
+
+## Project Overview
+
+The datasets for this project was taken from **NYC Open Data**
+
+  + NYC Subway Stations
+  + NYC Restaurants
+  + NYC Theaters
+  + NYC Museums and Galleries
+  
+  
+ The idea is to merge all these datasets and provide features similar to **Google maps** like finding subways,restaurants near station, theaters near station 
+
+## The First Subway
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/First_subway.jpg" width="600" height="400">
+
+```{r echo=FALSE, dpi=120}
+# knitr::include_graphics('https://raw.githubusercontent.com/shubhadasuresh/MTA-Sub#way/master/First_subway.jpg')
+
+
+```
+
+
+**Alfred Beach** constructed a Pneumatic transit line in 1869 also known as first New York Subway
+
+
+## NYC Subway
+
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/nyc.jpg" width="500" height="500">
+
+```{r echo=FALSE, dpi=120}
+#knitr::include_graphics('https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/nyc.jpg')
+
+```
+
+
+ 
+## NYC Subway Dataset
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide1.JPG" width="750" height="500">
+
+```{r echo=FALSE}
+
+#knitr::include_graphics('https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide1.JPG')
+
+```
+
+## NYC Restaurant Dataset
+
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide_2.JPG" width=750" height="500">
+
+```{r echo=FALSE}
+
+#knitr::include_graphics('https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide2.JPG')
+
+```
+
+## NYC Movie Theaters
+
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide3.JPG" width="750" height="500">
+
+```{r echo=FALSE}
+
+#knitr::include_graphics('https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/slide3.JPG')
+
+```
+
+
+ 
+
+---
+
+<center> 
+
+
+<h1>[DEMO](http://shubhadasuresh.shinyapps.io/geographical_information_system_of_nyc/)</h1>
+
+</center>
+
+
+## Conclusion & Next steps
+
+* My project is a miniature version of Google maps using Shiny R.
+
+
+* Demonstrates NYC subway to go from point A to point B with access to nearby Restaurants and Theaters.
+
+
+* Increase scope of this project by adding Museums, Galleries, Parks, Clubs near station.
+
+
+
+## References
+
+Google images
+
+https://en.wikipedia.org/wiki/History_of_the_New_York_City_Subway
+
+https://opendata.cityofnewyork.us/
+
+https://rstudio.github.io/leaflet/
+
+https://shiny.rstudio.com/
+
+https://rmarkdown.rstudio.com/ioslides_presentation_format.html
+
+
+
+
+---
+
+<img src="https://raw.githubusercontent.com/shubhadasuresh/MTA-Subway/master/questions.jpg" width="750" height="500">
+ 
+
+
