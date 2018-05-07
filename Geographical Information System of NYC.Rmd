@@ -128,3 +128,14 @@ write.csv(THEATER,'THEATER_cleaned.csv')
 for geographic (geodetic) coordinates.
   * Sort the coordinates in ascending order and pick 5 nearest to subrain station selected.
   * In leaflet, using different markers, Popups,Labels,colours, legend we can demonstrate **miniature version of google maps** using Shiny R.
+  
+  **For Demonstration Purposes** i have taken some sample of stations and Restaurants only as Shiny app hangs and times out for 30,000 rows of restaurants.
+  Eg: 
+  
+     + Chambers St -->  W 4th St - Washington Sq (Upper)
+     + Fulton Street --> Utica Ave
+     + Union Sq - 14th St -->  28th St
+     + Jay St - MetroTech -->  42nd St - Port Authority Bus Term
+     + Herald Sq - 34th St --> Jackson Hts - Roosevelt Av
+     
+   We can use above examples for nice representation.  
